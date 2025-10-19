@@ -39,16 +39,11 @@ extension _XML {
      
      
     */
-//    @dynamicMemberLookup
     public enum Accessor: CustomStringConvertible, Swift.Sequence {
-        case singleElement(Element)
-        case sequence([Element])
+        case singleElement(XMLElement)
+        case sequence([XMLElement])
         case failure(Error)
 
-//        public subscript(dynamicMember member: String) -> _XML.Accessor {
-//            return self[member]
-//        }
-        
         /**
          If Accessor object has a correct XML path, return XML element, otherwith return error
          
@@ -297,7 +292,7 @@ extension _XML {
         }
         
         /// access to child Elements
-        public var all: [Element]? {
+        public var all: [XMLElement]? {
             switch self {
             case .singleElement(let element):
                 return [element]
@@ -331,7 +326,7 @@ extension _XML {
         }
         
         /// if it has wrong XML path or multiple child elements, return nil, otherwise return Element
-        public var _element: Element? {
+        public var _element: XMLElement? {
             get {
                 switch self {
                 case .singleElement(let element):
@@ -406,7 +401,7 @@ extension _XML {
             }
         }
 
-        public func append(_ newElement: Element) {
+        public func append(_ newElement: XMLElement) {
             switch self {
             case .singleElement(let element):
                 element.childElements.append(newElement)
@@ -438,7 +433,7 @@ extension _XML {
         // MARK: - SequenceType
         
         public func makeIterator() -> AnyIterator<Accessor> {
-            let generator: [_XML.Element]
+            let generator: [_XML.XMLElement]
             switch self {
             case .failure(_):
                 generator = []
@@ -475,7 +470,7 @@ extension _XML {
             }
         }
         
-        fileprivate func recursivePrintAncient(_ element: Element) -> String {
+        fileprivate func recursivePrintAncient(_ element: XMLElement) -> String {
             var description = element.name
             if let unwrappedParent = element.parentElement {
                 description = recursivePrintAncient(unwrappedParent) + " > " + description
@@ -534,7 +529,7 @@ extension _XML {
             return doc
         }
 
-        private func traverse(_ element: Element) -> String {
+        private func traverse(_ element: XMLElement) -> String {
             let name = element.name
             let text = escapeXMLCharacters(element.text ?? "")
             let attrs = element.attributes.map { (k, v) in "\(k)=\"\(v)\"" }.joined(separator: " ")

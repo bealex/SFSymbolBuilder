@@ -23,6 +23,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		FA25D2C62EA4853400148864 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = README.md; sourceTree = "<group>"; };
 		FABA19D42EA4730C0000C572 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FABA19D82EA473B30000C572 /* SFSymbolBuilder-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "SFSymbolBuilder-Info.plist"; sourceTree = "<group>"; };
 		FABA19D92EA47DBD0000C572 /* AppIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = AppIcon.icon; sourceTree = "<group>"; };
@@ -54,6 +55,7 @@
 		FAEADBA62EA40AD30013CFB0 = {
 			isa = PBXGroup;
 			children = (
+				FA25D2C62EA4853400148864 /* README.md */,
 				FAEADBBF2EA40B030013CFB0 /* Code */,
 				FAEADBC12EA40B030013CFB0 /* Resources */,
 				FAEADBB02EA40AD30013CFB0 /* Products */,

@@ -25,24 +25,24 @@
 import Foundation
 
 extension _XML {
-    open class Element {
+    open class XMLElement {
         open var name: String
         open var text: String?
         open var attributes: [String: String]
-        open var childElements: [Element]
+        open var childElements: [XMLElement]
         open var lineNumberStart: Int
         open var lineNumberEnd: Int
         open var CDATA: Data?
         open var ignoreNamespaces: Bool
         
         // for println
-        open weak var parentElement: Element?
+        open weak var parentElement: XMLElement?
 
         public init(
             name: String,
             text: String? = nil,
             attributes: [String: String] = [:],
-            childElements: [Element] = [],
+            childElements: [XMLElement] = [],
             lineNumberStart: Int = -1,
             lineNumberEnd: Int = -1,
             CDATA: Data? = nil,

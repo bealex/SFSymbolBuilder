@@ -35,7 +35,7 @@ extension _XML {
         private(set) var error: XMLError?
 
         func parse(_ data: Data) -> Accessor {
-            stack = [Element]()
+            stack = [XMLElement]()
             stack.append(documentRoot)
             let parser = XMLParser(data: data)
             unsafe parser.delegate = self
@@ -50,17 +50,17 @@ extension _XML {
         init(trimming manner: CharacterSet? = nil, ignoreNamespaces: Bool = false) {
             self.trimmingManner = manner
             self.ignoreNamespaces = ignoreNamespaces
-            self.documentRoot = Element(name: "XML.Parser.AbstructedDocumentRoot", ignoreNamespaces: ignoreNamespaces)
+            self.documentRoot = XMLElement(name: "XML.Parser.AbstructedDocumentRoot", ignoreNamespaces: ignoreNamespaces)
         }
         
         // MARK:- private
-        fileprivate var documentRoot: Element
-        fileprivate var stack = [Element]()
+        fileprivate var documentRoot: XMLElement
+        fileprivate var stack = [XMLElement]()
         fileprivate let trimmingManner: CharacterSet?
         fileprivate let ignoreNamespaces: Bool
         
         func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String]) {
-            let node = Element(name: elementName, ignoreNamespaces: ignoreNamespaces)
+            let node = XMLElement(name: elementName, ignoreNamespaces: ignoreNamespaces)
             node.lineNumberStart = parser.lineNumber
             if !attributeDict.isEmpty {
                 node.attributes = attributeDict
