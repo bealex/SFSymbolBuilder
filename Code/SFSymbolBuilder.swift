@@ -62,11 +62,10 @@ enum SFSymbolBuilder {
         return data
     }
 
-    static func build(from configuration: SFSymbol.Configuration, to directory: URL) throws {
+    static func build(from configuration: SFSymbol.Configuration, to file: URL) throws {
         let templateXml = try processSymbol(configuration: configuration)
         let result = try _XML.document(templateXml)
-        let resultUrl = directory.appending(path: configuration.fileUrl.deletingPathExtension().appendingPathExtension("sf.svg").lastPathComponent)
-        try result.write(to: resultUrl, atomically: true, encoding: .utf8)
+        try result.write(to: file, atomically: true, encoding: .utf8)
         print("Done with \(configuration.fileUrl.absoluteString)")
     }
     

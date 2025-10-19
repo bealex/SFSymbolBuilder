@@ -53,7 +53,7 @@ extension SFBuilderApp {
             let savePanel = NSSavePanel()
             savePanel.title = "Save SF Symbol"
             savePanel.message = "Choose where to save the converted SF Symbol"
-            savePanel.nameFieldStringValue = url.deletingPathExtension().lastPathComponent + ".svg"
+            savePanel.nameFieldStringValue = url.deletingPathExtension().lastPathComponent + ".sfSymbol.svg"
             savePanel.allowedContentTypes = [ .svg ]
             savePanel.canCreateDirectories = true
             savePanel.directoryURL = url.deletingLastPathComponent()
@@ -65,7 +65,7 @@ extension SFBuilderApp {
             }
 
             // Build and save the SF Symbol to the chosen location
-            try SFSymbolBuilder.build(from: configuration, to: saveURL.deletingLastPathComponent())
+            try SFSymbolBuilder.build(from: configuration, to: saveURL)
 
             print("Successfully converted: \(url.lastPathComponent)")
             print("Output saved to: \(saveURL.path)")
