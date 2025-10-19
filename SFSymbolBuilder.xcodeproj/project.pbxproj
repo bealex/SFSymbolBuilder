@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		FABA19D52EA4730C0000C572 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FABA19D42EA4730C0000C572 /* AppDelegate.swift */; };
 		FAEADBC22EA40B030013CFB0 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAEADBBD2EA40B030013CFB0 /* ContentView.swift */; };
 		FAEADBC32EA40B030013CFB0 /* SFBuilderApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAEADBBE2EA40B030013CFB0 /* SFBuilderApp.swift */; };
 		FAEADBC42EA40B030013CFB0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FAEADBC02EA40B030013CFB0 /* Assets.xcassets */; };
@@ -21,7 +22,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		FAEADBAF2EA40AD30013CFB0 /* SFBuilder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SFBuilder.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		FABA19D42EA4730C0000C572 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		FABA19D82EA473B30000C572 /* SFSymbolBuilder-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "SFSymbolBuilder-Info.plist"; sourceTree = "<group>"; };
+		FAEADBAF2EA40AD30013CFB0 /* SFSymbolBuilder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SFSymbolBuilder.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FAEADBBD2EA40B030013CFB0 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		FAEADBBE2EA40B030013CFB0 /* SFBuilderApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SFBuilderApp.swift; sourceTree = "<group>"; };
 		FAEADBC02EA40B030013CFB0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -58,7 +61,7 @@
 		FAEADBB02EA40AD30013CFB0 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				FAEADBAF2EA40AD30013CFB0 /* SFBuilder.app */,
+				FAEADBAF2EA40AD30013CFB0 /* SFSymbolBuilder.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -71,6 +74,7 @@
 				FAEADBC52EA40B930013CFB0 /* SFSymbolBuilder.swift */,
 				FAEADBBD2EA40B030013CFB0 /* ContentView.swift */,
 				FAEADBBE2EA40B030013CFB0 /* SFBuilderApp.swift */,
+				FABA19D42EA4730C0000C572 /* AppDelegate.swift */,
 			);
 			path = Code;
 			sourceTree = "<group>";
@@ -78,6 +82,7 @@
 		FAEADBC12EA40B030013CFB0 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				FABA19D82EA473B30000C572 /* SFSymbolBuilder-Info.plist */,
 				FAEADBD42EA40DAB0013CFB0 /* template.svg */,
 				FAEADBC02EA40B030013CFB0 /* Assets.xcassets */,
 			);
@@ -99,9 +104,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		FAEADBAE2EA40AD30013CFB0 /* SFBuilder */ = {
+		FAEADBAE2EA40AD30013CFB0 /* SFSymbolBuilder */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = FAEADBBA2EA40AD40013CFB0 /* Build configuration list for PBXNativeTarget "SFBuilder" */;
+			buildConfigurationList = FAEADBBA2EA40AD40013CFB0 /* Build configuration list for PBXNativeTarget "SFSymbolBuilder" */;
 			buildPhases = (
 				FAEADBAB2EA40AD30013CFB0 /* Sources */,
 				FAEADBAC2EA40AD30013CFB0 /* Frameworks */,
@@ -111,11 +116,11 @@
 			);
 			dependencies = (
 			);
-			name = SFBuilder;
+			name = SFSymbolBuilder;
 			packageProductDependencies = (
 			);
 			productName = SFBuilder;
-			productReference = FAEADBAF2EA40AD30013CFB0 /* SFBuilder.app */;
+			productReference = FAEADBAF2EA40AD30013CFB0 /* SFSymbolBuilder.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -133,7 +138,7 @@
 					};
 				};
 			};
-			buildConfigurationList = FAEADBAA2EA40AD30013CFB0 /* Build configuration list for PBXProject "SFBuilder" */;
+			buildConfigurationList = FAEADBAA2EA40AD30013CFB0 /* Build configuration list for PBXProject "SFSymbolBuilder" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -149,7 +154,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				FAEADBAE2EA40AD30013CFB0 /* SFBuilder */,
+				FAEADBAE2EA40AD30013CFB0 /* SFSymbolBuilder */,
 			);
 		};
 /* End PBXProject section */
@@ -179,6 +184,7 @@
 				FAEADBE52EA420140013CFB0 /* _XML.swift in Sources */,
 				FAEADBE62EA420140013CFB0 /* Element.swift in Sources */,
 				FAEADBE72EA420140013CFB0 /* Accessor.swift in Sources */,
+				FABA19D52EA4730C0000C572 /* AppDelegate.swift in Sources */,
 				FAEADBE82EA420140013CFB0 /* Parser.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -330,6 +336,7 @@
 				ENABLE_RESOURCE_ACCESS_USB = NO;
 				ENABLE_USER_SELECTED_FILES = readwrite;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Resources/SFSymbolBuilder-Info.plist";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -373,6 +380,7 @@
 				ENABLE_RESOURCE_ACCESS_USB = NO;
 				ENABLE_USER_SELECTED_FILES = readwrite;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Resources/SFSymbolBuilder-Info.plist";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -395,7 +403,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		FAEADBAA2EA40AD30013CFB0 /* Build configuration list for PBXProject "SFBuilder" */ = {
+		FAEADBAA2EA40AD30013CFB0 /* Build configuration list for PBXProject "SFSymbolBuilder" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				FAEADBB82EA40AD40013CFB0 /* Debug */,
@@ -404,7 +412,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		FAEADBBA2EA40AD40013CFB0 /* Build configuration list for PBXNativeTarget "SFBuilder" */ = {
+		FAEADBBA2EA40AD40013CFB0 /* Build configuration list for PBXNativeTarget "SFSymbolBuilder" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				FAEADBBB2EA40AD40013CFB0 /* Debug */,
