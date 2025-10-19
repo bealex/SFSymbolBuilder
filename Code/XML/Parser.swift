@@ -38,12 +38,12 @@ extension _XML {
             stack = [Element]()
             stack.append(documentRoot)
             let parser = XMLParser(data: data)
-            parser.delegate = self
+            unsafe parser.delegate = self
             parser.parse()
             if let error = error {
-                return Accessor(error)
+                return .failure(error)
             } else {
-                return Accessor(documentRoot)
+                return .singleElement(documentRoot)
             }
         }
 

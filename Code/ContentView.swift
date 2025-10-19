@@ -10,15 +10,11 @@ import UniformTypeIdentifiers
 
 struct ContentView: View {
     @State
-    private var selectedSvgUrl: URL?
-    @State
-    private var svgImage: NSImage?
+    private var svgImages: [NSImage] = []
     @State
     private var isFileImporterPresented = false
     @State
-    private var isFileExporterPresented = false
-    @State
-    private var generatedSVGData: Data?
+    private var selectedFiles: [URL] = []
 
     var body: some View {
         VStack(spacing: 20) {
@@ -28,11 +24,16 @@ struct ContentView: View {
                     .fill(Color(nsColor: .controlBackgroundColor))
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                 
-                if let svgImage {
-                    Image(nsImage: svgImage)
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .padding()
+                if !svgImages.isEmpty {
+                    ScrollView(.vertical) {
+                        LazyVGrid(columns: [ .init(.adaptive(minimum: 128, maximum: 128)) ], spacing: 10) {
+                            ForEach(0 ..< svgImages.count, id: \.self) { imageIndex in
+                                Image(nsImage: svgImages[imageIndex]).resizable().aspectRatio(contentMode: .fit)
+                                    .border(.tertiary, width: 1)
+                                    .padding(12)
+                            }
+                        }
+                    }
                 } else {
                     VStack(spacing: 12) {
                         Image(systemName: "photo.on.rectangle.angled")
@@ -50,71 +51,73 @@ struct ContentView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             
             HStack {
-                Button {
-                    isFileImporterPresented = true
-                } label: {
-                    Label("Open SVG File", systemImage: "folder.badge.plus")
-                        .frame(minWidth: 200)
+                Button(
+                    action: { isFileImporterPresented = true },
+                    label: {
+                        Label("Open SVG Files", systemImage: "folder.badge.plus")
+                            .frame(minWidth: 200)
+                    }
+                )
+
+                if !selectedFiles.isEmpty {
+                    Button(
+                        role: .destructive,
+                        action: {
+                            selectedFiles = []
+                            svgImages = []
+                        },
+                        label: {
+                            Label("Clear Selection", systemImage: "xmark.bin")
+                                .frame(minWidth: 200)
+                        }
+                    )
+                    .tint(Color.red)
                 }
 
-                Button {
-                    isFileExporterPresented = true
-                } label: {
-                    Label("Build SF Symbol", systemImage: "hammer.fill")
-                        .frame(minWidth: 200)
-                }
-                .disabled(selectedSvgUrl == nil)
+                Spacer()
 
+                Button(
+                    action: { SFBuilderApp.handleDroppedFiles(urls: selectedFiles) },
+                    label: {
+                        Label(
+                            selectedFiles.count > 1
+                                ? "Build \(selectedFiles.count) SF Symbols"
+                                : "Build SF Symbol",
+                            systemImage: "hammer.fill"
+                        )
+                        .frame(minWidth: 200)
+                    }
+                )
+                .disabled(selectedFiles.isEmpty)
             }
             .buttonStyle(.borderedProminent)
             .controlSize(.large)
         }
         .padding()
-        .fileImporter(isPresented: $isFileImporterPresented, allowedContentTypes: [ .svg ], allowsMultipleSelection: false) { result in
+        .fileImporter(isPresented: $isFileImporterPresented, allowedContentTypes: [ .svg ], allowsMultipleSelection: true) { result in
             switch result {
-            case .success(let urls):
-                if let url = urls.first {
-                    selectedSvgUrl = url
-                    loadSVG(from: url)
-                }
-            case .failure(let error):
-                print("Error selecting file: \(error.localizedDescription)")
-            }
-        }
-        .fileExporter(
-            isPresented: $isFileExporterPresented,
-            document: SVGDocument(data: generatedSVGData),
-            contentType: .svg,
-            defaultFilename: selectedSvgUrl?.deletingPathExtension().appendingPathExtension("sf.svg").lastPathComponent
-        ) { result in
-            switch result {
-            case .success(let url):
-                print("File saved to: \(url.path)")
-            case .failure(let error):
-                print("Error saving file: \(error.localizedDescription)")
+                case .success(let urls):
+                    selectedFiles = urls
+                    loadSVGs(from: urls)
+                case .failure(let error):
+                    print("Error selecting file: \(error.localizedDescription)")
             }
         }
     }
     
-    private func loadSVG(from url: URL) {
-        guard url.startAccessingSecurityScopedResource(), let selectedSvgUrl else {
-            print("Unable to access file")
-            return
-        }
+    private func loadSVGs(from urls: [URL]) {
+        svgImages = []
+        for url in urls {
+            guard url.startAccessingSecurityScopedResource() else {
+                print("Unable to access file")
+                return
+            }
 
-        defer { url.stopAccessingSecurityScopedResource() }
+            defer { url.stopAccessingSecurityScopedResource() }
 
-        do {
-            let configuration = SFSymbol.Configuration(fileUrl: selectedSvgUrl)
-            generatedSVGData = try SFSymbolBuilder.buildToData(from: configuration)
-        } catch {
-            print("Error converting a symbol: \(error)")
-        }
-
-        if let image = NSImage(contentsOf: url) {
-            svgImage = image
-        } else {
-            print("Unable to load SVG file")
+            if let image = NSImage(contentsOf: url) {
+                svgImages.append(image)
+            }
         }
     }
 }

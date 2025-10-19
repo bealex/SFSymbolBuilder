@@ -44,20 +44,7 @@ extension _XML {
         case singleElement(Element)
         case sequence([Element])
         case failure(Error)
-        
-        public init(_ element: Element) {
-            self = .singleElement(element)
-        }
-        
-        public init(_ sequence: [Element]) {
-            self = .sequence(sequence)
-        }
-        
-        public init(_ error: Error) {
-            self = .failure(error)
-        }
-        
-        
+
 //        public subscript(dynamicMember member: String) -> _XML.Accessor {
 //            return self[member]
 //        }
@@ -88,15 +75,15 @@ extension _XML {
             let accessor: Accessor
             switch self {
             case .sequence(let elements) where index < elements.count:
-                accessor =  Accessor(elements[index])
+                accessor =  .singleElement(elements[index])
             case .singleElement(let element) where index == 0:
-                accessor = Accessor(element)
+                    accessor = .singleElement(element)
             case .failure(let error):
-                accessor = Accessor(error)
+                accessor = .failure(error)
                 break
             default:
                 let error = accessError("cannot access Index: \(index)")
-                accessor = Accessor(error)
+                accessor = .failure(error)
                 break
             }
             return accessor
@@ -146,17 +133,17 @@ extension _XML {
                 }
                 if childElements.isEmpty {
                     let error = accessError("\(key) not found.")
-                    accessor = Accessor(error)
+                    accessor = .failure(error)
                 } else if childElements.count == 1 {
-                    accessor = Accessor(childElements[0])
+                    accessor = .singleElement(childElements[0])
                 } else {
-                    accessor = Accessor(childElements)
+                    accessor = .sequence(childElements)
                 }
             case .failure(let error):
-                accessor = Accessor(error)
+                    accessor = .failure(error)
             default:
                 let error = accessError("cannot access \(key), because of multiple elements")
-                accessor = Accessor(error)
+                accessor = .failure(error)
             }
             return accessor
         }
@@ -191,7 +178,7 @@ extension _XML {
                     accessor = accessor[key]
                 default:
                     let error = accessError("cannot access \(position)")
-                    accessor = Accessor(error)
+                    accessor = .failure(error)
                 }
             }
             return accessor
@@ -228,7 +215,7 @@ extension _XML {
                     accessor = accessor[key: key]
                 default:
                     let error = accessError("cannot access \(position)")
-                    accessor = Accessor(error)
+                    accessor = .failure(error)
                 }
             }
             return accessor
@@ -359,15 +346,15 @@ extension _XML {
         public var last: Accessor {
             switch self {
             case .singleElement(let element):
-                return Accessor(element)
+                return .singleElement(element)
             case .sequence(let elements):
                 if let lastElement = elements.last {
-                    return Accessor(lastElement)
+                    return .singleElement(lastElement)
                 } else {
-                    return Accessor(accessError("cannot access last element"))
+                    return .failure(accessError("cannot access last element"))
                 }
             case .failure(let error):
-                return Accessor(error)
+                return .failure(error)
             }
         }
         
@@ -375,24 +362,24 @@ extension _XML {
         public var first: Accessor {
             switch self {
             case .singleElement(let element):
-                return Accessor(element)
+                return .singleElement(element)
             case .sequence(let elements):
                 if let firstElement = elements.first {
-                    return Accessor(firstElement)
+                    return .singleElement(firstElement)
                 } else {
-                    return Accessor(accessError("cannot access first element"))
+                    return .failure(accessError("cannot access first element"))
                 }
             case .failure(let error):
-                return Accessor(error)
+                return .failure(error)
             }
         }
         
         public func map<T>(_ transform: (Accessor) -> T) -> [T] {
             switch self {
             case .singleElement(let element):
-                return [Accessor(element)].map(transform)
+                return [.singleElement(element)].map(transform)
             case .sequence(let elements):
-                return elements.map({ Accessor($0) }).map(transform)
+                return elements.map({ .singleElement($0) }).map(transform)
             case .failure:
                 return [Accessor]().map(transform)
             }
@@ -403,9 +390,9 @@ extension _XML {
             var accessors = [Accessor]()
             switch self {
             case .singleElement(let element):
-                accessors = [Accessor(element)]
+                accessors = [.singleElement(element)]
             case .sequence(let elements):
-                accessors = elements.map({ Accessor($0) })
+                accessors = elements.map({ .singleElement($0) })
             case .failure:
                 accessors = [Accessor]()
             }
@@ -464,7 +451,7 @@ extension _XML {
             return AnyIterator {
                 let nextAccessor: Accessor?
                 if index < generator.count {
-                    nextAccessor = Accessor(generator[index])
+                    nextAccessor = .singleElement(generator[index])
                     index += 1
                 } else {
                     nextAccessor = nil
