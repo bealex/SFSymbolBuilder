@@ -32,56 +32,111 @@ struct SFBuilderApp: App {
 
 extension SFBuilderApp {
     @MainActor
-    static func handleDroppedFile(url: URL) {
-        guard url.pathExtension.lowercased() == "svg" else {
-            print("Not an SVG file: \(url.path)")
-            return
-        }
-
-        guard url.startAccessingSecurityScopedResource() else {
-            print("Unable to access file: \(url.path)")
-            return
-        }
-
-        defer { url.stopAccessingSecurityScopedResource() }
-
-        do {
-            // Create configuration for the conversion
-            let configuration = SFSymbol.Configuration(fileUrl: url)
-
-            // Show save panel to let user choose where to save
-            let savePanel = NSSavePanel()
-            savePanel.title = "Save SF Symbol"
-            savePanel.message = "Choose where to save the converted SF Symbol"
-            savePanel.nameFieldStringValue = url.deletingPathExtension().lastPathComponent + ".sfSymbol.svg"
-            savePanel.allowedContentTypes = [ .svg ]
-            savePanel.canCreateDirectories = true
-            savePanel.directoryURL = url.deletingLastPathComponent()
-            
-            let response = savePanel.runModal()
-            guard response == .OK, let saveURL = savePanel.url else {
-                print("Save cancelled by user")
-                return
-            }
-
-            // Build and save the SF Symbol to the chosen location
-            try SFSymbolBuilder.build(from: configuration, to: saveURL)
-
-            print("Successfully converted: \(url.lastPathComponent)")
-            print("Output saved to: \(saveURL.path)")
-
-            // Show notification to user
+    static func handleDroppedFiles(urls: [URL]) {
+        // Filter for SVG files only
+        let svgFiles = urls.filter { $0.pathExtension.lowercased() == "svg" }
+        
+        guard !svgFiles.isEmpty else {
+            print("No SVG files found in dropped items")
             showNotification(
-                title: "SF Symbol Created",
-                message: "Converted \(url.lastPathComponent) successfully"
+                title: "No SVG Files",
+                message: "Please drop SVG files to convert"
             )
-        } catch {
-            print("Error converting file: \(error.localizedDescription)")
+            return
+        }
+        
+        // Show directory picker for output location
+        let openPanel = NSOpenPanel()
+        openPanel.title = "Choose Output Directory"
+        openPanel.message = "Select where to save \(svgFiles.count) converted SF \(svgFiles.count == 1 ? "Symbol" : "Symbols")"
+        openPanel.canChooseDirectories = true
+        openPanel.canChooseFiles = false
+        openPanel.canCreateDirectories = true
+        openPanel.allowsMultipleSelection = false
+        
+        // Default to the directory of the first file
+        if let firstFile = svgFiles.first {
+            openPanel.directoryURL = firstFile.deletingLastPathComponent()
+        }
+        
+        let response = openPanel.runModal()
+        guard response == .OK, let outputDirectory = openPanel.url else {
+            print("Save cancelled by user")
+            return
+        }
+        
+        // Start security-scoped access for the output directory
+        guard outputDirectory.startAccessingSecurityScopedResource() else {
+            print("Unable to access output directory")
+            showNotification(
+                title: "Access Denied",
+                message: "Unable to access the selected directory"
+            )
+            return
+        }
+        defer { outputDirectory.stopAccessingSecurityScopedResource() }
+        
+        // Process all files
+        var successCount = 0
+        var failedFiles: [String] = []
+        
+        for url in svgFiles {
+            guard url.startAccessingSecurityScopedResource() else {
+                print("Unable to access file: \(url.path)")
+                failedFiles.append(url.lastPathComponent)
+                continue
+            }
+            
+            defer { url.stopAccessingSecurityScopedResource() }
+            
+            do {
+                // Create configuration for the conversion
+                let configuration = SFSymbol.Configuration(fileUrl: url)
+                
+                // Build output filename
+                let outputFilename = url.deletingPathExtension().lastPathComponent + ".sfSymbol.svg"
+                let outputURL = outputDirectory.appendingPathComponent(outputFilename)
+                
+                // Build and save the SF Symbol
+                try SFSymbolBuilder.build(from: configuration, to: outputURL)
+                
+                print("Successfully converted: \(url.lastPathComponent)")
+                successCount += 1
+            } catch {
+                print("Error converting file \(url.lastPathComponent): \(error.localizedDescription)")
+                failedFiles.append(url.lastPathComponent)
+            }
+        }
+        
+        // Show summary notification
+        if successCount > 0 {
+            let message: String
+            if failedFiles.isEmpty {
+                message = "Successfully converted \(successCount) \(successCount == 1 ? "file" : "files")"
+            } else {
+                message = "Converted \(successCount) \(successCount == 1 ? "file" : "files"). Failed: \(failedFiles.count)"
+            }
+            
+            showNotification(
+                title: "Conversion Complete",
+                message: message
+            )
+        } else {
             showNotification(
                 title: "Conversion Failed",
-                message: "Failed to convert \(url.lastPathComponent): \(error.localizedDescription)"
+                message: "Failed to convert any files"
             )
         }
+        
+        if !failedFiles.isEmpty {
+            print("Failed files: \(failedFiles.joined(separator: ", "))")
+        }
+    }
+    
+    // Keep single file handler for backward compatibility
+    @MainActor
+    static func handleDroppedFile(url: URL) {
+        handleDroppedFiles(urls: [url])
     }
 
     private static func showNotification(title: String, message: String) {

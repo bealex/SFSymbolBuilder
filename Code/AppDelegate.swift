@@ -10,10 +10,8 @@ import SwiftUI
 
 class AppDelegate: NSObject, NSApplicationDelegate {
     func application(_ application: NSApplication, open urls: [URL]) {
-        for url in urls {
-            Task { @MainActor in
-                SFBuilderApp.handleDroppedFile(url: url)
-            }
+        Task { @MainActor in
+            SFBuilderApp.handleDroppedFiles(urls: urls)
         }
     }
 }
