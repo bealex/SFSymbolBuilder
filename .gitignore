@@ -61,5 +61,4 @@ fastlane/Preview.html
 fastlane/screenshots/**/*.png
 fastlane/test_output
 .DS_Store
-/AppBinary/SFSymbolBuilder.app
 /AppBinary
