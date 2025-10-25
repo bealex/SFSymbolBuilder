@@ -35,11 +35,14 @@ Here is an example of SVG, exported from Figma, and ready for conversion:
 
  1. Open the App
  2. Open SVGs there. They will be previewed
+![App UI](https://github.com/bealex/SFSymbolBuilder/blob/main/Documentation/Step%202.png?raw=true)
  3. Press "Build SF Symbols" button. It will ask for a directory where to save them
  4. Import resulting svg files into SF Symbols.app. You can do that by dropping svg files into "Custom Symbols" in the Library there.
+![SF Symbols App. Where to drop custom symbols](https://github.com/bealex/SFSymbolBuilder/blob/main/Documentation/Step%204.png?raw=true)
  5. Edit them as you want
  6. Export them and add them to Xcode Assets directory.
  7. Use them in your SwiftUI code: `Image("<asset name>")`
+
 
 ## Limitations
 
